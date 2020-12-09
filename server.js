@@ -19,7 +19,7 @@ app.listen(port, ()=>{
  * Second Parameter is the db response handler. 
 */
 app.post('/users',(req,res)=>{
-  User.create({
+  User.create({ // Takes a newData and a callback
     name: req.body.newData.name,
     email: req.body.newData.email,
     password: req.body.newData.password
@@ -38,7 +38,7 @@ app.post('/users',(req,res)=>{
 
 app.route('/users/:id')
 // READ
-.get((req,res)=>{
+.get((req,res)=>{ // Takes an ID and callback
   User.findById(
     req.params.id,
     
@@ -64,7 +64,7 @@ app.route('/users/:id')
 
 // UPDATE
 .put((req,res)=>{
-  User.findByIdAndUpdate(
+  User.findByIdAndUpdate( // Takes an ID, newData, options (optional), callback
     req.params.id,
     
     {
@@ -100,5 +100,26 @@ app.route('/users/:id')
 
 // DELETE
 .delete((req,res)=>{
-  // User.findByIdAndDelete()
+  User.findByIdAndDelete( // Takes an ID and a callback
+    req.params.id,
+
+    (err, data) => {
+      if (err){
+        res.json({
+          success: false,
+          message: err
+        })
+      } else if (!data){
+        res.json({
+          success: false,
+          message: "Not Found!"
+        })
+      } else{
+        res.json({
+          success: true,
+          data: data
+        })
+      }
+    }
+  )
 })
